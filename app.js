@@ -8,14 +8,21 @@ const uuid = require("uuid")
 const mongoCollections = require('./mongoCollections')
 const exphbs = require("express-handlebars")
 
-const recipes = mongoCollections.recipes
+const users = mongoCollections.users
+const posts = mongoCollections.posts
+const bcrypt = require('bcrypt')
+const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 const app = express()
 
+const recipes = mongoCollections.recipes
 const rootdir = express.static(__dirname + "/public")
 app.engine("handlebars", exphbs())
 app.set("view engine", "handlebars")
 // support POST of json data
-app.use(express.json())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(cookieParser())
 
 app.use("/public", rootdir)
 app.use('/visScripts', express.static(__dirname + '/node_modules/vis/dist/'));
@@ -55,7 +62,31 @@ app.get('/graph', async (req, res) => {
 })
 
 app.post('/login', async (req, res) => {
+    let username = req.body.username
+    let passwd = req.body.password
 
+    if (!username || !passwd)
+        return res.render('layouts/login', {errormsg: "Error: Please provide a username and password"})
+
+    const usersCollection = await username()
+
+    const userData = await usersCollection.findOne({"_id": username})
+
+    if (userData == null) {
+        return res.render('layouts/login', {errormsg: "Error: User does not exist in database"})
+    }
+
+
+    bcrypt.compare(passwd, userData.hashedPassword).then(function (result) {
+        console.log(result)
+        if (result){
+            res.cookie('AuthCookie', username, {maxAge: 1000*60*60*24, httpOnly:true})
+            res.redirect('/')
+        }
+        else {
+            res.render('layouts/login', {errormsg: "Error: Invalid username/password combination"})
+        }
+    })
 })
 
 app.get('/logout', async (req, res) => {

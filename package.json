@@ -9,6 +9,9 @@
   "author": "Michael Curry 10393875, Graham Howard 10398029, Alex Grin 10397921",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^3.0.2",
+    "body-parser": "latest",
+    "cookie-parser": "^1.4.3",
     "express": "^4.16.4",
     "express-handlebars": "^3.0.0",
     "mongodb": "^3.1.8",
