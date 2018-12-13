@@ -23,6 +23,7 @@ app.engine("handlebars", exphbs({
   }));
 app.set('views', __dirname + "/views/layouts");
 app.set("view engine", "handlebars")
+
 // support POST of json data
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
@@ -68,7 +69,7 @@ app.get('/graph', async (req, res) => {
         res.redirect('/')
     }
     else {
-        res.render('layouts/graphView')
+        res.render('graphView')
     }
 })
 
