@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 
+
 h1 span {
     font-size: 16px;
 }
@@ -11,10 +12,27 @@ p span {
 }
 
 * {
-    max-width: 800px;
+    background: #fcfcfc;
+    color: #333333;
+    max-width: 32em;
+    margin: auto;
     font-family: 'Nunito', sans-serif;
 }
 
+.thread-link {
+    padding: 0.3rem 0rem 0.3rem 0rem;
+}
+
+.thread-list {
+    padding: 0.7rem 0rem 0.7rem 0rem;
+}
+
+.no-threads {
+    color: #774444;
+    font-style: italic;
+    padding: 1rem 0rem 1rem 0rem;
+}
+
 main {
-    margin: 10px;
+    margin: 1rem;
 }
