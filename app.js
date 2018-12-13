@@ -87,12 +87,12 @@ app.get('/graph/:id', async (req, res) => {
     }
     console.log(threadID)
     //Get all posts in this thread
-    const usersCollection = await posts()
-    const threadPosts = await usersCollection.find({"thread": threadID})
+    const postsCollection = await posts()
+    const threadPosts = await postsCollection.find({"thread": threadID}).toArray()
     if (!threadPosts){
-        console.log("Error")
+        console.log("ERROR")
     }
-    
+
     // check if authenticated
     if (req.cookies && req.cookies.AuthCookie){
         res.render('graphView', {tidnum: threadID, tPosts: threadPosts})
