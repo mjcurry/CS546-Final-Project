@@ -41,3 +41,9 @@ main {
     color: red;
     font-weight: bold;
 }
+
+.info {
+    margin-top: 30px;
+    font-size: 75%;
+    font-style: italic;
+}

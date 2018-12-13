@@ -63,7 +63,7 @@ app.get('/', async (req, res) => {
     let threads = []
     
     allPosts.forEach(function(p) {
-        console.log(p._id + " " + p.thread)
+        //console.log(p._id + " " + p.thread)
         if(p._id === p.thread) {
             threads.push({
                 tuuid: p._id,
@@ -72,12 +72,21 @@ app.get('/', async (req, res) => {
         }
     });
 
-    console.log("we have " + threads.length + " threads")
+    //console.log("we have " + threads.length + " threads")
 
-    res.render("catalog", {
-        title: 'ChatSprout Thread Catalog',
-        threads: threads
-    })
+    if (req.cookies.AuthCookie){
+        res.render("catalog", {
+            title: 'ChatSprout Thread Catalog',
+            threads: threads,
+            loginuser: req.cookies.AuthCookie
+        })
+    }
+    else {
+        res.render("catalog", {
+            title: 'ChatSprout Thread Catalog',
+            threads: threads
+        })
+    }
 })
 
 app.get('/login', async (req, res) => {
@@ -93,13 +102,24 @@ app.get('/login', async (req, res) => {
     }
 })
 
-app.get('/graph', async (req, res) => {
+app.get('/graph/:id', async (req, res) => {
+    const threadID = req.params.id
+    if (!threadID){
+        console.log("ERROR")
+    }
+    //Get all posts in this thread
+    const usersCollection = await posts()
+    const threadPosts = await usersCollection.find({"thread": threadID})
+    if (!threadPosts){
+        console.log("Error")
+    }
+    
     // check if authenticated
     if (req.cookies && req.cookies.AuthCookie){
-        res.redirect('/')
+        res.render('graphView', {tidnum: threadID, tPosts: threadPosts})
     }
     else {
-        res.render('graphView')
+        res.render('graphView', {tidnum: threadID, tPosts: threadPosts})
     }
 })
 
@@ -120,7 +140,6 @@ app.post('/login', async (req, res) => {
 
 
     bcrypt.compare(passwd, userData.hashedPassword).then(function (result) {
-        console.log(result)
         if (result){
             res.cookie('AuthCookie', username, {maxAge: 1000*60*60*24, httpOnly:true})
             res.redirect('/')
