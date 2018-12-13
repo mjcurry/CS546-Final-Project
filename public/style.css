@@ -36,3 +36,8 @@ p span {
 main {
     margin: 1rem;
 }
+
+.errormsg {
+    color: red;
+    font-weight: bold;
+}

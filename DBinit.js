@@ -3,7 +3,7 @@
 const mongoCollections = require('./mongoCollections')
 const users = mongoCollections.users
 const posts = mongoCollections.posts
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const uuid = require('uuid')
 
 

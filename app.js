@@ -89,14 +89,14 @@ app.post('/login', async (req, res) => {
     let passwd = req.body.password
 
     if (!username || !passwd)
-        return res.render('layouts/login', {errormsg: "Error: Please provide a username and password"})
+        return res.render('login', {title: "Login to ChatSprout", errormsg: "Error: Please provide a username and password"})
 
-    const usersCollection = await username()
+    const usersCollection = await users()
 
     const userData = await usersCollection.findOne({"_id": username})
 
     if (userData == null) {
-        return res.render('layouts/login', {errormsg: "Error: User does not exist in database"})
+        return res.render('login', {title: "Login to ChatSprout", errormsg: "Error: User does not exist in database"})
     }
 
 
@@ -107,7 +107,7 @@ app.post('/login', async (req, res) => {
             res.redirect('/')
         }
         else {
-            res.render('layouts/login', {errormsg: "Error: Invalid username/password combination"})
+            res.render('login', {title: "Login to ChatSprout", errormsg: "Error: Invalid username/password combination"})
         }
     })
 })
