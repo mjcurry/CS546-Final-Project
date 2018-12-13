@@ -12,9 +12,12 @@ const recipes = mongoCollections.recipes
 const app = express()
 
 const rootdir = express.static(__dirname + "/public")
+app.engine("handlebars", exphbs())
 app.set("view engine", "handlebars")
 // support POST of json data
 app.use(express.json())
+
+app.use("/public", rootdir)
 
 
 // handle request data errors for methods with bad input
@@ -27,11 +30,17 @@ app.use((error, req, res, next) => {
 });
 
 app.get('/', async (req, res) => {
-
+    res.json({"status": "ok"})
 })
 
 app.get('/login', async (req, res) => {
-
+    // check if authenticated
+    if (req.cookies && req.cookies.AuthCookie){
+        res.redirect('/')
+    }
+    else {
+        res.render('layouts/login')
+    }
 })
 
 app.post('/login', async (req, res) => {
@@ -39,7 +48,10 @@ app.post('/login', async (req, res) => {
 })
 
 app.get('/logout', async (req, res) => {
+    // clear the auth cookie
+    res.clearCookie("AuthCookie")
 
+    res.redirect('/')
 })
 
 app.get('/register', async (req, res) => {
@@ -180,4 +192,5 @@ app.post('/thread/:id', async (req, res) => {
 
 app.listen(3000, () => {
     console.log("App is running on http://localhost:3000");
+    if (process && process.send) process.send({done: true})
 });

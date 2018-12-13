@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+h1 span {
+    font-size: 16px;
+}
+
+p span {
+    font-weight: bold;
+    font-size: 20px;
+    padding-right: 10px;
+}
+
+* {
+    max-width: 800px;
+    font-family: 'Nunito', sans-serif;
+}
+
+main {
+    margin: 10px;
+}
