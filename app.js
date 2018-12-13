@@ -7,6 +7,7 @@ const express = require('express')
 const uuid = require("uuid")
 const mongoCollections = require('./mongoCollections')
 const exphbs = require("express-handlebars")
+const dbinit = require("./DBinit")
 
 const users = mongoCollections.users
 const posts = mongoCollections.posts
@@ -15,7 +16,6 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const app = express()
 
-const recipes = mongoCollections.recipes
 const rootdir = express.static(__dirname + "/public")
 app.engine("handlebars", exphbs({
     defaultLayout: 'main',
@@ -242,7 +242,7 @@ app.post('/thread/:id', async (req, res) => {
 //     res.json({})
 // })
 
-
+dbinit.init()
 app.listen(3000, () => {
     console.log("App is running on http://localhost:3000");
     if (process && process.send) process.send({done: true})
