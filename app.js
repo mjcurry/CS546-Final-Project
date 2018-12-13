@@ -7,6 +7,7 @@ const express = require('express')
 const uuid = require("uuid")
 const mongoCollections = require('./mongoCollections')
 const exphbs = require("express-handlebars")
+const dbinit = require("./DBinit")
 
 const users = mongoCollections.users
 const posts = mongoCollections.posts
@@ -15,7 +16,6 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const app = express()
 
-const recipes = mongoCollections.recipes
 const rootdir = express.static(__dirname + "/public")
 app.engine("handlebars", exphbs({
     defaultLayout: 'main',
@@ -23,6 +23,7 @@ app.engine("handlebars", exphbs({
   }));
 app.set('views', __dirname + "/views/layouts");
 app.set("view engine", "handlebars")
+
 // support POST of json data
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
@@ -88,14 +89,14 @@ app.post('/login', async (req, res) => {
     let passwd = req.body.password
 
     if (!username || !passwd)
-        return res.render('login', {errormsg: "Error: Please provide a username and password"})
+        return res.render('login', {title: "Login to ChatSprout", errormsg: "Error: Please provide a username and password"})
 
-    const usersCollection = await username()
+    const usersCollection = await users()
 
     const userData = await usersCollection.findOne({"_id": username})
 
     if (userData == null) {
-        return res.render('login', {errormsg: "Error: User does not exist in database"})
+        return res.render('login', {title: "Login to ChatSprout", errormsg: "Error: User does not exist in database"})
     }
 
 
@@ -106,7 +107,7 @@ app.post('/login', async (req, res) => {
             res.redirect('/')
         }
         else {
-            res.render('login', {errormsg: "Error: Invalid username/password combination"})
+            res.render('login', {title: "Login to ChatSprout", errormsg: "Error: Invalid username/password combination"})
         }
     })
 })
@@ -253,7 +254,7 @@ app.post('/thread/:id', async (req, res) => {
 //     res.json({})
 // })
 
-
+dbinit.init()
 app.listen(3000, () => {
     console.log("App is running on http://localhost:3000");
     if (process && process.send) process.send({done: true})

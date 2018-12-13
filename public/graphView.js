@@ -1,4 +1,3 @@
-const vis = require("vis")
 
 // create an array with nodes
 var nodes = new vis.DataSet([
