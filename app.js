@@ -17,7 +17,11 @@ const app = express()
 
 const recipes = mongoCollections.recipes
 const rootdir = express.static(__dirname + "/public")
-app.engine("handlebars", exphbs())
+app.engine("handlebars", exphbs({
+    defaultLayout: 'main',
+    layoutsDir: __dirname + "/views/layouts"
+  }));
+app.set('views', __dirname + "/views/layouts");
 app.set("view engine", "handlebars")
 // support POST of json data
 app.use(bodyParser.json())
@@ -38,7 +42,11 @@ app.use((error, req, res, next) => {
 });
 
 app.get('/', async (req, res) => {
-    res.json({"status": "ok"})
+    threads = {}
+
+    res.render("catalog", {
+        threads: threads
+    })
 })
 
 app.get('/login', async (req, res) => {
@@ -47,7 +55,10 @@ app.get('/login', async (req, res) => {
         res.redirect('/')
     }
     else {
-        res.render('layouts/login')
+        res.render('login', {
+            title: 'Login to ChatSprout',
+            errormsg: ''
+        })
     }
 })
 

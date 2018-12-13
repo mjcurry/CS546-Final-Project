@@ -1,0 +1,11 @@
+<main>
+    <h1>Thread Catalog</h1>
+    <p>
+        {{each threads}}
+            <a href="/threads/{{tidnum}}">{{ttext}}</a><br>
+        {{else}}
+            No threads to display.
+        {{/each}}
+    </p>
+
+</main>
