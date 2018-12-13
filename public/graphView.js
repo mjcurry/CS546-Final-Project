@@ -1,3 +1,6 @@
+//Get all posts in this thread
+// const usersCollection = await posts()
+// const threadPosts = await usersCollection.findAll({"thread": tidnum})
 
 // create an array with nodes
 var nodes = new vis.DataSet([

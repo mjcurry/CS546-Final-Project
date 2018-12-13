@@ -43,18 +43,18 @@ app.use((error, req, res, next) => {
 });
 
 app.get('/', async (req, res) => {
-    // threads = [
-    //     {
-    //         tidnum: 12345,
-    //         ttext: "all your base are belong to us"
-    //     },
-    //     {
-    //         tidnum: 23456,
-    //         ttext: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget tortor fermentum, tristique nulla et, dapibus mi. Donec metus."
-    //     }
-    // ]
+    threads = [
+        {
+            tidnum: 12345,
+            ttext: "all your base are belong to us"
+        },
+        {
+            tidnum: 23456,
+            ttext: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget tortor fermentum, tristique nulla et, dapibus mi. Donec metus."
+        }
+    ]
 
-    threads = []
+    // threads = []
 
     res.render("catalog", {
         threads: threads
@@ -74,13 +74,17 @@ app.get('/login', async (req, res) => {
     }
 })
 
-app.get('/graph', async (req, res) => {
+app.get('/graph/:id', async (req, res) => {
+    const threadID = req.params.id
+    if (!threadID){
+
+    }
     // check if authenticated
     if (req.cookies && req.cookies.AuthCookie){
-        res.redirect('/')
+        res.render('graphView', {tidnum: threadID})
     }
     else {
-        res.render('graphView')
+        res.render('graphView', {tidnum: threadID})
     }
 })
 
