@@ -54,9 +54,28 @@ app.get('/', async (req, res) => {
     //     }
     // ]
 
-    threads = []
+    // threads = []
+
+
+    const postsCollection = await posts();
+    const allPosts = await postsCollection.find({}).toArray()
+    //console.log(allPosts)
+    let threads = []
+    
+    allPosts.forEach(function(p) {
+        console.log(p._id + " " + p.thread)
+        if(p._id === p.thread) {
+            threads.push({
+                tuuid: p._id,
+                ttext: p.text
+            })
+        }
+    });
+
+    console.log("we have " + threads.length + " threads")
 
     res.render("catalog", {
+        title: 'ChatSprout Thread Catalog',
         threads: threads
     })
 })
