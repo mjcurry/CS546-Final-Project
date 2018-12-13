@@ -77,14 +77,22 @@ app.get('/login', async (req, res) => {
 app.get('/graph/:id', async (req, res) => {
     const threadID = req.params.id
     if (!threadID){
-
+        console.log("ERROR")
     }
+    console.log(threadID)
+    //Get all posts in this thread
+    const usersCollection = await posts()
+    const threadPosts = await usersCollection.find({"thread": threadID})
+    if (!threadPosts){
+        console.log("Error")
+    }
+    
     // check if authenticated
     if (req.cookies && req.cookies.AuthCookie){
-        res.render('graphView', {tidnum: threadID})
+        res.render('graphView', {tidnum: threadID, tPosts: threadPosts})
     }
     else {
-        res.render('graphView', {tidnum: threadID})
+        res.render('graphView', {tidnum: threadID, tPosts: threadPosts})
     }
 })
 
