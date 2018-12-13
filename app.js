@@ -18,6 +18,7 @@ app.set("view engine", "handlebars")
 app.use(express.json())
 
 app.use("/public", rootdir)
+app.use('/visScripts', express.static(__dirname + '/node_modules/vis/dist/'));
 
 
 // handle request data errors for methods with bad input
@@ -40,6 +41,16 @@ app.get('/login', async (req, res) => {
     }
     else {
         res.render('layouts/login')
+    }
+})
+
+app.get('/graph', async (req, res) => {
+    // check if authenticated
+    if (req.cookies && req.cookies.AuthCookie){
+        res.redirect('/')
+    }
+    else {
+        res.render('layouts/graphView')
     }
 })
 
