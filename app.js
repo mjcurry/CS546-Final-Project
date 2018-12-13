@@ -85,7 +85,6 @@ app.get('/graph/:id', async (req, res) => {
     if (!threadID){
         console.log("ERROR")
     }
-    console.log(threadID)
     //Get all posts in this thread
     const usersCollection = await posts()
     const threadPosts = await usersCollection.find({"thread": threadID})
@@ -119,7 +118,6 @@ app.post('/login', async (req, res) => {
 
 
     bcrypt.compare(passwd, userData.hashedPassword).then(function (result) {
-        console.log(result)
         if (result){
             res.cookie('AuthCookie', username, {maxAge: 1000*60*60*24, httpOnly:true})
             res.redirect('/')
