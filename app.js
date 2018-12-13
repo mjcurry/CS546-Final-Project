@@ -54,11 +54,17 @@ app.get('/', async (req, res) => {
         }
     ]
 
-    // threads = []
-
-    res.render("catalog", {
-        threads: threads
-    })
+    if (req.cookies.AuthCookie){
+        res.render("catalog", {
+            threads: threads,
+            loginuser: req.cookies.AuthCookie
+        })
+    }
+    else {
+        res.render("catalog", {
+            threads: threads
+        })
+    }
 })
 
 app.get('/login', async (req, res) => {
