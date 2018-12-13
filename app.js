@@ -11,7 +11,7 @@ const dbinit = require("./DBinit")
 
 const users = mongoCollections.users
 const posts = mongoCollections.posts
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const app = express()
@@ -42,7 +42,18 @@ app.use((error, req, res, next) => {
 });
 
 app.get('/', async (req, res) => {
-    threads = {}
+    // threads = [
+    //     {
+    //         tidnum: 12345,
+    //         ttext: "all your base are belong to us"
+    //     },
+    //     {
+    //         tidnum: 23456,
+    //         ttext: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget tortor fermentum, tristique nulla et, dapibus mi. Donec metus."
+    //     }
+    // ]
+
+    threads = []
 
     res.render("catalog", {
         threads: threads
