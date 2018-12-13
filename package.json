@@ -1,0 +1,17 @@
+{
+  "name": "cs-546-final-project",
+  "version": "1.0.0",
+  "description": "CS 546 Final Group Project",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Michael Curry 10393875, Graham Howard 10398029, Alex Grin 10397921",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.0",
+    "mongodb": "^3.1.8",
+    "uuid": "^3.3.2"
+  }
+}
