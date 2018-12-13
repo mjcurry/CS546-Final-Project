@@ -43,25 +43,47 @@ app.use((error, req, res, next) => {
 });
 
 app.get('/', async (req, res) => {
-    threads = [
-        {
-            tidnum: 12345,
-            ttext: "all your base are belong to us"
-        },
-        {
-            tidnum: 23456,
-            ttext: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget tortor fermentum, tristique nulla et, dapibus mi. Donec metus."
+    // threads = [
+    //     {
+    //         tidnum: 12345,
+    //         ttext: "all your base are belong to us"
+    //     },
+    //     {
+    //         tidnum: 23456,
+    //         ttext: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget tortor fermentum, tristique nulla et, dapibus mi. Donec metus."
+    //     }
+    // ]
+
+    // threads = []
+
+
+    const postsCollection = await posts();
+    const allPosts = await postsCollection.find({}).toArray()
+    //console.log(allPosts)
+    let threads = []
+    
+    allPosts.forEach(function(p) {
+        //console.log(p._id + " " + p.thread)
+        if(p._id === p.thread) {
+            threads.push({
+                tuuid: p._id,
+                ttext: p.text
+            })
         }
-    ]
+    });
+
+    //console.log("we have " + threads.length + " threads")
 
     if (req.cookies.AuthCookie){
         res.render("catalog", {
+            title: 'ChatSprout Thread Catalog',
             threads: threads,
             loginuser: req.cookies.AuthCookie
         })
     }
     else {
         res.render("catalog", {
+            title: 'ChatSprout Thread Catalog',
             threads: threads
         })
     }
@@ -85,7 +107,6 @@ app.get('/graph/:id', async (req, res) => {
     if (!threadID){
         console.log("ERROR")
     }
-    console.log(threadID)
     //Get all posts in this thread
     const postsCollection = await posts()
     const threadPosts = await postsCollection.find({"thread": threadID}).toArray()
@@ -119,7 +140,6 @@ app.post('/login', async (req, res) => {
 
 
     bcrypt.compare(passwd, userData.hashedPassword).then(function (result) {
-        console.log(result)
         if (result){
             res.cookie('AuthCookie', username, {maxAge: 1000*60*60*24, httpOnly:true})
             res.redirect('/')

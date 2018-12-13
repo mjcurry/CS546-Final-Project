@@ -22,8 +22,21 @@ async function init() {
 
     // usersCollection.insertOne({"_id": "username", "hashedPassword": pwdhash})
 
-    postsCollection.insertOne({"_id": uuid.v4(), "thread": uuid.v4(),
+    const tuuid = uuid.v4();
+    const tuuid2 = uuid.v4();
+
+    postsCollection.insertOne({"_id": tuuid, "thread": tuuid,
     "text": "Hello World", "upvotes": 14, "downvotes": 7})
+
+    postsCollection.insertOne({"_id": uuid.v4(), "thread": tuuid,
+    "text": "all your base are belong to us", "upvotes": 14, "downvotes": 7})
+
+    postsCollection.insertOne({"_id": tuuid2, "thread": tuuid2,
+    "text": "lorem ipsum", "upvotes": 14, "downvotes": 7})
+
+    postsCollection.insertOne({"_id": tuuid, "thread": tuuid,
+    "text": "Hello World", "upvotes": 14, "downvotes": 7})
+
 }
 
 
