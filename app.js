@@ -103,10 +103,18 @@ app.get('/graph/:id', async (req, res) => {
 
     // check if authenticated
     if (req.cookies && req.cookies.AuthCookie){
-        res.render('graphView', {tidnum: threadID, tPosts: encodeURIComponent(JSON.stringify(threadPosts))})
+        res.render('graphView', {
+            title: "ChatSprout Thread " + threadID,
+            tidnum: threadID, 
+            tPosts: encodeURIComponent(JSON.stringify(threadPosts))
+        })
     }
     else {
-        res.render('graphView', {tidnum: threadID, tPosts: encodeURIComponent(JSON.stringify(threadPosts))})
+        res.render('graphView', {
+            title: "ChatSprout Thread " + threadID,
+            tidnum: threadID, 
+            tPosts: encodeURIComponent(JSON.stringify(threadPosts))
+        })
     }
 })
 

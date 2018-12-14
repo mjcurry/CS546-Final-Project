@@ -6,7 +6,14 @@
     <link rel="stylesheet" href="/public/style.css">
 </head>
 <body>
-<img src="/public/logo.png">
-{{{body}}}
+    <div class="logo"><a href="/"><img src="/public/logo.png"></a></div>
+    <div style="login-notif">
+        {{#if loginuser}}
+            Logged in as: {{loginuser}} | <a href="/logout">Logout</a>
+        {{else}}
+            You are not logged in | <a href="/login">Login</a>
+        {{/if}}
+    </div>
+    {{{body}}}
 </body>
 </html>
