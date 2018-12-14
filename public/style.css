@@ -19,6 +19,10 @@ p span {
     font-family: 'Nunito', sans-serif;
 }
 
+.login-notif {
+    padding-right: 1rem;
+}
+
 .thread-link {
     padding: 0.3rem 0rem 0.3rem 0rem;
 }
