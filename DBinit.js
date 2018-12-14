@@ -25,8 +25,13 @@ async function init() {
     const tuuid = uuid.v4();
     const tuuid2 = uuid.v4();
 
+    // DO it something like this the children should have Ids of other posts
+    postsCollection.insertOne({_id: uuid.v4(), thread: tuuid,
+    text: 'all your base are belong to us', children: [_id1, _id2], upvotes: 14, downvotes: 7})
+    
     postsCollection.insertOne({_id: tuuid, thread: tuuid,
     text: 'Hello World', upvotes: 14, downvotes: 7})
+
 
     postsCollection.insertOne({_id: uuid.v4(), thread: tuuid,
     text: 'all your base are belong to us', upvotes: 14, downvotes: 7})
