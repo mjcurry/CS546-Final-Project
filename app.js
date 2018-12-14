@@ -76,6 +76,28 @@ app.get('/', async (req, res) => {
     }
 })
 
+app.post('/newthread', async (req, res) => {
+
+    const ptext = req.body.ptext
+    const tuuid = uuid.v4()
+
+    if(!ptext) { 
+        return res.redirect('/')
+    }
+
+    const postsCollection = await posts();
+    const newPost = postsCollection.insertOne({
+        _id: tuuid,
+        thread: tuuid,
+        text: ptext,
+        children: [],
+        upvotes: 0,
+        downvotes: 0
+    })
+
+    res.redirect('/')
+})
+
 app.get('/login', async (req, res) => {
     // check if authenticated
     if (req.cookies && req.cookies.AuthCookie){

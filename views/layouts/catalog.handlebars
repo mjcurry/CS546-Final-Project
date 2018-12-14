@@ -15,4 +15,12 @@
         </p>
     {{/if}}
 
+    <div class='submit-form'>
+        <form id='new-thread-form' method='post' action='/newthread'>
+            <label for="ptxet">New Thread: </label><br/>
+            <textarea id="ptext" name="ptext" rows='2' cols='64' maxlength='128'></textarea><br/>
+            <button type="submit">New Thread</button>
+        </form>
+    </div>
+
 </main>
