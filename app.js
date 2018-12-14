@@ -43,19 +43,6 @@ app.use((error, req, res, next) => {
 });
 
 app.get('/', async (req, res) => {
-    // threads = [
-    //     {
-    //         tidnum: 12345,
-    //         ttext: "all your base are belong to us"
-    //     },
-    //     {
-    //         tidnum: 23456,
-    //         ttext: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget tortor fermentum, tristique nulla et, dapibus mi. Donec metus."
-    //     }
-    // ]
-
-    // threads = []
-
 
     const postsCollection = await posts();
     const allPosts = await postsCollection.find({}).toArray()
@@ -116,10 +103,10 @@ app.get('/graph/:id', async (req, res) => {
 
     // check if authenticated
     if (req.cookies && req.cookies.AuthCookie){
-        res.render('graphView', {tidnum: threadID, tPosts: threadPosts})
+        res.render('graphView', {tidnum: threadID, tPosts: encodeURIComponent(JSON.stringify(threadPosts))})
     }
     else {
-        res.render('graphView', {tidnum: threadID, tPosts: threadPosts})
+        res.render('graphView', {tidnum: threadID, tPosts: encodeURIComponent(JSON.stringify(threadPosts))})
     }
 })
 

@@ -1,38 +1,42 @@
-// //If we have
-// if (tPosts){
-//     var nodes = new vis.DataSet({})
-//     for(post in tPosts){
-//         nodes.add([
-//             {id:post._id, label: post.text + "\nupvotes: " + post.upvotes.toString() + "\ndownvotes: " + post.downvotes.toString()}
-//         ]);
-//     }
+//If we have
+var tPosts = tPosts;
+console.log(tPosts)
+if (tPosts){
+    var nodes = new vis.DataSet({})
+    for(post in tPosts){
+        nodes.add([
+            {id:post._id, label: post.text + "\nupvotes: " + post.upvotes + "\ndownvotes: " + post.downvotes}
+        ]);
+    }
 
-//     var edges = new vis.DataSet({})
-//     for(post in tPosts){
-//         for (child in post.children){
-//             edges.add([
-//                 {id:post._id, to: child}
-//             ])
-//         }
-//     }
-// }
+    var edges = new vis.DataSet({})
+    for(post in tPosts){
+        for (child in post.children){
+            edges.add([
+                {id:post._id, to: child}
+            ])
+        }
+    }
+}
 
-// create an array with nodes
-var nodes = new vis.DataSet([
-    {id: 1, label: 'Node 1'},
-    {id: 2, label: 'Node 2'},
-    {id: 3, label: 'Node 3'},
-    {id: 4, label: 'Node 4'},
-    {id: 5, label: 'Node 5'}
-]);
 
-// create an array with edges
-var edges = new vis.DataSet([
-    {from: 1, to: 3},
-    {from: 1, to: 2},
-    {from: 2, to: 4},
-    {from: 2, to: 5}
-]);
+
+// // create an array with nodes
+// var nodes = new vis.DataSet([
+//     {id: 1, label: 'Node 1'},
+//     {id: 2, label: 'Node 2'},
+//     {id: 3, label: 'Node 3'},
+//     {id: 4, label: 'Node 4'},
+//     {id: 5, label: 'Node 5'}
+// ]);
+
+// // create an array with edges
+// var edges = new vis.DataSet([
+//     {from: 1, to: 3},
+//     {from: 1, to: 2},
+//     {from: 2, to: 4},
+//     {from: 2, to: 5}
+// ]);
 
 // create a network
 var container = document.getElementById('mynetwork');
