@@ -37,6 +37,11 @@ p span {
     padding: 1rem 0rem 1rem 0rem;
 }
 
+.submit-form {
+    padding-top: 2em;
+    margin-top: 2em;
+}
+
 main {
     margin: 1rem;
 }
