@@ -153,10 +153,29 @@ app.get('/logout', async (req, res) => {
 })
 
 app.get('/register', async (req, res) => {
-
+    res.render('register', {title: "Register for ChatSprout"})
 })
 
 app.post('/register', async (req, res) => {
+    let username = req.body.username
+    let passwd = req.body.password
+
+    if (!username || !passwd)
+        return res.render('register', {title: "Register for ChatSprout", errormsg: "Error: Please provide a username and password"})
+
+    const usersCollection = await users()
+
+    const userData = await usersCollection.findOne({"_id": username})
+
+    if (userData != null) {
+        return res.render('register', {title: "Register for ChatSprout", errormsg: "Error: Username already exists"})
+    }
+
+    bcrypt.hash(passwd, 1, async function (err, hash) {
+        const userData = await usersCollection.insertOne({"_id": username, "hashedPassword": hash})
+        res.cookie('AuthCookie', username, {maxAge: 1000*60*60*24, httpOnly:true})
+        res.redirect('/')
+    })
 
 })
 

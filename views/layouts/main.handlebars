@@ -7,11 +7,11 @@
 </head>
 <body>
     <div class="logo"><a href="/"><img src="/public/logo.png"></a></div>
-    <div style="login-notif">
+    <div class="login-notif">
         {{#if loginuser}}
             Logged in as: {{loginuser}} | <a href="/logout">Logout</a>
         {{else}}
-            You are not logged in | <a href="/login">Login</a>
+            You are not logged in | <a href="/login">Login</a> | <a href="/register">Register</a>
         {{/if}}
     </div>
     {{{body}}}

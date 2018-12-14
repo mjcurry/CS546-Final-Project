@@ -14,13 +14,13 @@ p span {
 * {
     background: #fcfcfc;
     color: #333333;
-    max-width: 32em;
+    max-width: 35em;
     margin: auto;
     font-family: 'Nunito', sans-serif;
 }
 
 .login-notif {
-    padding-right: 1rem;
+    text-align: center;
 }
 
 .thread-link {
