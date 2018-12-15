@@ -207,7 +207,8 @@ app.get('/graph/:id', async (req, res) => {
         res.render('graphView', {
             title: "ChatSprout Thread " + threadID,
             tidnum: threadID, 
-            tPosts: encodeURIComponent(JSON.stringify(threadPosts))
+            tPosts: encodeURIComponent(JSON.stringify(threadPosts)),
+            loginuser: req.cookies.AuthCookie,
         })
     }
     else {
