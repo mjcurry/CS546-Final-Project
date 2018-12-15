@@ -46,7 +46,6 @@ app.use((error, req, res, next) => {
 
 let catalogErrMsg = ''
 app.get('/', async (req, res) => {
-
     const postsCollection = await posts();
     const allPosts = await postsCollection.find({}).toArray()
 
@@ -86,6 +85,7 @@ app.post('/voteComment', async (req, res)=> {
     if(comment){
         node = await postsCollection.findOne({_id: comment})
         if (node){
+            //Decide whether we are upvoting or downvoting because two buttons redirect here.
             amount = parseInt(req.body.amount)
             if (amount == 1){
                 node.upvotes += 1
@@ -102,6 +102,7 @@ app.post('/voteComment', async (req, res)=> {
 app.post('/newComment', async (req, res)=> {
     const postsCollection = await posts();
 
+    //Create the new comment in the thread specified
     const newPost = {
         _id: uuid.v4(),
         thread: req.body.thread,
@@ -111,8 +112,11 @@ app.post('/newComment', async (req, res)=> {
         downvotes: 0
     }
 
+    //Add the comment as a child of a node if it was set as one
     let node = req.body.parentNode
-    if (node){
+
+    //Null is passed as a string in the object so we have to check against that
+    if (node != "null"){
         let parent = await postsCollection.findOne({_id: node})
         if (parent){
             parent.children.push(newPost._id)

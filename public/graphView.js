@@ -1,8 +1,9 @@
-//If we have
+//Get comments and the thread ID
 var tPosts = tPosts;
 var threadID = threadID;
 
 if (tPosts){
+    //Add all comments as nodes in the graph
     var nodes = new vis.DataSet({})
     for(i=0; i<tPosts.length; i++){
         nodes.add([
@@ -11,6 +12,7 @@ if (tPosts){
     }
 
     var edges = new vis.DataSet({})
+    //First we add the child connects to prevent the children from being added to main
     let childrenAdded = []
     for(i=0; i<tPosts.length; i++){
         if (tPosts[i].thread !== tPosts[i]._id){
@@ -25,6 +27,7 @@ if (tPosts){
         }
     }
     
+    //Add main thread connections
     for(i=0; i<tPosts.length; i++){
         if (tPosts[i].thread !== tPosts[i]._id){
             if(childrenAdded.includes(tPosts[i]._id) == false){
@@ -36,68 +39,67 @@ if (tPosts){
     }
 }
 
-// create a network
+// Get a new graph network container
 var container = document.getElementById('mynetwork');
-var network = null
 
-// provide the data in the vis format
+// Provide the data in the vis format
 var data = {
     nodes: nodes,
     edges: edges
 };
 
-function draw() {
-    // create a network
-    var options = {
-        manipulation: {
-                addNode: function (data, callback) {
-                // filling in the popup DOM elements
-                document.getElementById('operation').innerHTML = "Add Node";
-                document.getElementById('node-id').value = data.id;
-                document.getElementById('node-label').value = data.label;
-                document.getElementById('saveButton').onclick = saveData.bind(this, data, callback);
-                document.getElementById('cancelButton').onclick = clearPopUp.bind();
-                document.getElementById('network-popUp').style.display = 'block';
-                },
-                editNode: function (data, callback) {
-                // filling in the popup DOM elements
-                document.getElementById('operation').innerHTML = "Edit Node";
-                document.getElementById('node-id').value = data.id;
-                document.getElementById('node-label').value = data.label;
-                document.getElementById('saveButton').onclick = saveData.bind(this, data, callback);
-                document.getElementById('cancelButton').onclick = cancelEdit.bind(this,callback);
-                document.getElementById('network-popUp').style.display = 'block';
-                },
-                addEdge: function (data, callback) {
-                if (data.from == data.to) {
-                    var r = confirm("Do you want to connect the node to itself?");
-                    if (r == true) {
-                    callback(data);
-                    }
-                }
-                else {
-                    callback(data);
-                }
-            }
-        },
-        edges: {
-            font: {
-                size: 12
+// Generate the graph network options as specified on vis website
+var options = {
+    manipulation: {
+            addNode: function (data, callback) {
+            // filling in the popup DOM elements
+            document.getElementById('operation').innerHTML = "Add Node";
+            document.getElementById('node-id').value = data.id;
+            document.getElementById('node-label').value = data.label;
+            document.getElementById('saveButton').onclick = saveData.bind(this, data, callback);
+            document.getElementById('cancelButton').onclick = clearPopUp.bind();
+            document.getElementById('network-popUp').style.display = 'block';
             },
-            widthConstraint: {
-                maximum: 200
+            editNode: function (data, callback) {
+            // filling in the popup DOM elements
+            document.getElementById('operation').innerHTML = "Edit Node";
+            document.getElementById('node-id').value = data.id;
+            document.getElementById('node-label').value = data.label;
+            document.getElementById('saveButton').onclick = saveData.bind(this, data, callback);
+            document.getElementById('cancelButton').onclick = cancelEdit.bind(this,callback);
+            document.getElementById('network-popUp').style.display = 'block';
+            },
+            addEdge: function (data, callback) {
+            if (data.from == data.to) {
+                var r = confirm("Do you want to connect the node to itself?");
+                if (r == true) {
+                callback(data);
+                }
             }
+            else {
+                callback(data);
+            }
+        }
+    },
+    edges: {
+        font: {
+            size: 12
         },
-        nodes: {
-            shape: 'box',
-            margin: 10,
-            widthConstraint: {
-                maximum: 200
-            }
-        }   
-    };
-    network = new vis.Network(container, data, options);
-}
+        widthConstraint: {
+            maximum: 200
+        }
+    },
+    nodes: {
+        shape: 'box',
+        margin: 10,
+        widthConstraint: {
+            maximum: 200
+        }
+    }   
+};
+
+//Generate the graph network using the container, data defined above, and the options specified.
+var network = new vis.Network(container, data, options);
 
 function clearPopUp() {
     document.getElementById('saveButton').onclick = null;
@@ -117,11 +119,10 @@ function saveData(data,callback) {
     callback(data);
 }
 
-function init() {
-    draw();
-}
+//Define selected node here otherwise it fails
+var selectedNode = null
 
-let selectedNode = null
+//Used to generate new comment and also include information necessary to add it to the database.
 function post() {
     textbox = document.getElementById('ptext')
     
@@ -229,11 +230,10 @@ function downVoteComment() {
     form.submit();
 }
 
+//Detects that a user has clicked on a Graph network node.
 function handleNodeClick(){
     let node = network.getSelectedNodes()
     if (node){
         selectedNode = node[0]
     }
 }
-
-init()
