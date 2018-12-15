@@ -44,39 +44,40 @@ app.use((error, req, res, next) => {
     return next()
 });
 
-let catalogErrMsg = ''
+let catalogErrMsg = ''  // error message to be displayed on catalog page
 app.get('/', async (req, res) => {
-    const postsCollection = await posts();
+
+    const postsCollection = await posts();                      // retrieve posts from mongo
     const allPosts = await postsCollection.find({}).toArray()
 
-    let threads = []
+    let threads = []    // list of thread-starting posts
     
-    allPosts.forEach(function(p) {
-        if(p._id === p.thread) {
-            threads.push({
-                tuuid: p._id,
+    allPosts.forEach(function(p) {  // iter through each post
+        if(p._id === p.thread) {    // if the post id is the same as the thread id
+            threads.push({          // then it's a thread-starting post
+                tuuid: p._id,       // so add it to the thread list
                 ttext: p.text
             })
         }
     });
 
-    if (req.cookies.AuthCookie){
-        res.render("catalog", {
+    if (req.cookies.AuthCookie){    // if a user is logged in
+        res.render("catalog", {     // render the catalog
             title: 'ChatSprout Thread Catalog',
             threads: threads,
-            loginuser: req.cookies.AuthCookie,
+            loginuser: req.cookies.AuthCookie,  // w/ username
             errmsg: catalogErrMsg
         })
     }
     else {
         res.render("catalog", {
             title: 'ChatSprout Thread Catalog',
-            threads: threads,
-            errmsg: catalogErrMsg
+            threads: threads,       // w/o username
+            errmsg: catalogErrMsg   
         })
     }
 
-    catalogErrMsg = ''
+    catalogErrMsg = ''      // if there's been no error then reset the message
 })
 
 app.post('/voteComment', async (req, res)=> {
@@ -156,8 +157,8 @@ app.post('/deleteComment', async (req, res)=> {
 
 app.post('/newthread', async (req, res) => {
 
-    const ptext = req.body.ptext
-    const tuuid = uuid.v4()
+    const ptext = req.body.ptext    // get post text
+    const tuuid = uuid.v4()         // generate new thread id number
 
     if (!ptext) {    // no empty posts
         return res.redirect('/')
@@ -169,10 +170,10 @@ app.post('/newthread', async (req, res) => {
     }
 
     const postsCollection = await posts();
-    const newPost = postsCollection.insertOne({
-        _id: tuuid,
+    const newPost = postsCollection.insertOne({ // add a new post
+        _id: tuuid,     // post id is same as thread id since this is a new thread
         thread: tuuid,
-        text: ptext,
+        text: ptext,    // post text as supplied
         children: [],
         upvotes: 0,
         downvotes: 0
