@@ -17,10 +17,12 @@ const cookieParser = require('cookie-parser')
 const app = express()
 
 const rootdir = express.static(__dirname + "/public")
+
 app.engine("handlebars", exphbs({
     defaultLayout: 'main',
     layoutsDir: __dirname + "/views/layouts"
   }));
+
 app.set('views', __dirname + "/views/layouts");
 app.set("view engine", "handlebars")
 
@@ -47,11 +49,10 @@ app.get('/', async (req, res) => {
 
     const postsCollection = await posts();
     const allPosts = await postsCollection.find({}).toArray()
-    //console.log(allPosts)
+
     let threads = []
     
     allPosts.forEach(function(p) {
-        //console.log(p._id + " " + p.thread)
         if(p._id === p.thread) {
             threads.push({
                 tuuid: p._id,
@@ -59,8 +60,6 @@ app.get('/', async (req, res) => {
             })
         }
     });
-
-    //console.log("we have " + threads.length + " threads")
 
     if (req.cookies.AuthCookie){
         res.render("catalog", {
@@ -79,6 +78,20 @@ app.get('/', async (req, res) => {
     }
 
     catalogErrMsg = ''
+})
+
+app.post('/newComment', async (req, res)=> {
+    const postsCollection = await posts();
+    const newPost = postsCollection.insertOne({
+        _id: uuid.v4(),
+        thread: req.body.thread,
+        text: req.body.comment,
+        children: [],
+        upvotes: 0,
+        downvotes: 0
+    })
+
+    res.redirect('/graph/' + req.body.thread)
 })
 
 app.post('/newthread', async (req, res) => {
@@ -209,22 +222,6 @@ app.post('/register', async (req, res) => {
         res.redirect('/')
     })
 
-})
-
-app.get('/thread/:id', async (req, res) => {
-    const threadId = req.params.id
-
-
-
-    res.json(data)
-})
-
-app.post('/thread/:id', async (req, res) => {
-    const threadId = req.params.id
-
-    let postData = req.body
-
-    res.json(data)
 })
 
 dbinit.init()

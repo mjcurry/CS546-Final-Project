@@ -4,9 +4,9 @@
     {{#if threads}}
         <div class="thread-list">
             {{#each threads}}
-                <p class="thread-link">
-                    <a href="/graph/{{this.tuuid}}">{{this.ttext}}</a>
-                </p>
+                    <p class="thread-link">
+                        <a href="/graph/{{this.tuuid}}">{{this.ttext}}</a>
+                    </p>
             {{/each}}
         </div>
     {{else}}
@@ -16,7 +16,8 @@
     {{/if}}
 
     <div class='submit-form'>
-        <form id='new-thread-form' method='post' action='/newthread'>
+        {{!-- <form id='new-thread-form' method='post' action='/newthread'> --}}
+        <form id='new-thread-form'></form>
             <label for="ptxet">New Thread: </label><br/>
             <textarea id="ptext" name="ptext" rows='2' cols='64' maxlength='128'></textarea><br/>
             <button type="submit">New Thread</button>

@@ -13,6 +13,7 @@
 
     <script type="text/javascript"> 
         var tPosts = JSON.parse(decodeURIComponent("{{{tPosts}}}"));
+        var threadID = "{{{tidnum}}}"
     </script>
 
 
@@ -30,5 +31,18 @@
     </div>
     <br/>
     <script src="/public/graphView.js" type="text/javascript"></script>
+
+    <div class='submit-form'>
+        <form id='new-comment-form'></form>
+            <label for="ptxet">New Comment: </label><br/>
+            <textarea id="ptext" name="ptext" rows='2' cols='64' maxlength='128'></textarea><br/>
+            <button type="submit", onclick="post();">Submit</button>
+        </form>
+        <p class='errormsg'>
+            {{errmsg}}
+        </p>
+    </div>
+
+    <div id="PostForm"></div>
 
 </main>

@@ -1,5 +1,7 @@
 //If we have
 var tPosts = tPosts;
+var threadID = threadID;
+
 if (tPosts){
     var nodes = new vis.DataSet({})
     for(i=0; i<tPosts.length; i++){
@@ -10,9 +12,9 @@ if (tPosts){
 
     var edges = new vis.DataSet({})
     for(i=0; i<tPosts.length; i++){
-        for (j=0; j<tPosts[i].children.length; j++){
+        if (tPosts[i].thread !== tPosts[i]._id){
             edges.add([
-                {id:tPosts[i]._id, to: tPosts[i].children[j]}
+                {from:tPosts[i].thread, to: tPosts[i]._id}
             ])
         }
     }
@@ -28,7 +30,6 @@ var data = {
 };
 
 function draw() {
-    console.log("Hello")
     // create a network
     var options = {
         manipulation: {
@@ -61,7 +62,23 @@ function draw() {
                     callback(data);
                 }
             }
-        }
+        },
+        edges: {
+            font: {
+                size: 12
+            },
+            widthConstraint: {
+                maximum: 200,
+                minimum: 80
+            }
+        },
+        nodes: {
+            shape: 'box',
+            margin: 10,
+            widthConstraint: {
+                maximum: 200
+            }
+        }   
     };
     var network = new vis.Network(container, data, options);
 }
@@ -86,6 +103,34 @@ function saveData(data,callback) {
 
 function init() {
     draw();
+}
+
+function post() {
+    textbox = document.getElementById('ptext')
+    dataToSend = {
+        comment: textbox.value,
+        thread: threadID
+    }
+    
+    // The rest of this code assumes you are not using a library.
+    // It can be made less wordy if you use one.
+    var form = document.createElement("form");
+    form.setAttribute("method", 'post');
+    form.setAttribute("action", '/newComment');
+
+    for(var key in dataToSend) {
+        if(dataToSend.hasOwnProperty(key)) {
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", key);
+            hiddenField.setAttribute("value", dataToSend[key]);
+
+            form.appendChild(hiddenField);
+        }
+    }
+
+    document.getElementById("PostForm").appendChild(form)
+    form.submit();
 }
 
 init()

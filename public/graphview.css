@@ -1,18 +1,10 @@
 #mynetwork {
-    width: 1000px;
+    width: 1600px;
     height: 600px;
     border: 3px solid lightgray;
-    margin: auto
 }
-
 body, select {
     font: 10pt sans;
-}
-#mynetwork {
-    position:relative;
-    width: 800px;
-    height: 600px;
-    border: 1px solid lightgray;
 }
 table.legend_table {
     font-size: 11px;
