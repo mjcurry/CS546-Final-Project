@@ -80,16 +80,72 @@ app.get('/', async (req, res) => {
     catalogErrMsg = ''
 })
 
+app.post('/voteComment', async (req, res)=> {
+    const postsCollection = await posts();
+    let comment = req.body.selectedComment
+    if(comment){
+        node = await postsCollection.findOne({_id: comment})
+        if (node){
+            amount = parseInt(req.body.amount)
+            if (amount == 1){
+                node.upvotes += 1
+            }else{
+                node.downvotes += 1
+            }
+            await postsCollection.replaceOne({_id: node._id}, node)
+        }
+    }
+
+    res.redirect('/graph/' + req.body.thread)
+})
+
 app.post('/newComment', async (req, res)=> {
     const postsCollection = await posts();
-    const newPost = postsCollection.insertOne({
+
+    const newPost = {
         _id: uuid.v4(),
         thread: req.body.thread,
         text: req.body.comment,
         children: [],
         upvotes: 0,
         downvotes: 0
-    })
+    }
+
+    let node = req.body.parentNode
+    if (node){
+        let parent = await postsCollection.findOne({_id: node})
+        if (parent){
+            parent.children.push(newPost._id)
+        }
+        await postsCollection.replaceOne({_id: node}, parent)
+    }
+
+    await postsCollection.insertOne(newPost)
+
+    res.redirect('/graph/' + req.body.thread)
+})
+
+app.post('/deleteComment', async (req, res)=> {
+    const postsCollection = await posts();
+    let node = req.body.selectedComment
+    
+    //We need to make sure we remove the comment from any parent nodes as well to avoid conflict
+    let allPosts = await postsCollection.find({thread:req.body.thread}).toArray()
+    if (allPosts){
+        for (i=0; i<allPosts.length; i++){
+            for(j=0; j<allPosts[i].children.length; j++){
+                if (allPosts[i].children[j] === node){
+                    allPosts[i].children.splice(j, 1)
+
+                    await postsCollection.replaceOne({_id: allPosts[i]._id}, allPosts[i])
+                }
+            }
+        }
+    }
+    
+    if(node){
+        await postsCollection.deleteOne({_id : node})
+    }
 
     res.redirect('/graph/' + req.body.thread)
 })

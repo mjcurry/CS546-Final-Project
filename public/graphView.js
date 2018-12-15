@@ -11,17 +11,34 @@ if (tPosts){
     }
 
     var edges = new vis.DataSet({})
+    let childrenAdded = []
     for(i=0; i<tPosts.length; i++){
         if (tPosts[i].thread !== tPosts[i]._id){
-            edges.add([
-                {from:tPosts[i].thread, to: tPosts[i]._id}
-            ])
+            if(tPosts[i].children.length !== 0){
+                for (j=0; j<tPosts[i].children.length; j++){
+                    edges.add([
+                        {from:tPosts[i]._id, to: tPosts[i].children[j]}
+                    ])
+                    childrenAdded.push(tPosts[i].children[j])
+                }
+            }
+        }
+    }
+    
+    for(i=0; i<tPosts.length; i++){
+        if (tPosts[i].thread !== tPosts[i]._id){
+            if(childrenAdded.includes(tPosts[i]._id) == false){
+                edges.add([
+                    {from:tPosts[i].thread, to: tPosts[i]._id}
+                ])
+            }
         }
     }
 }
 
 // create a network
 var container = document.getElementById('mynetwork');
+var network = null
 
 // provide the data in the vis format
 var data = {
@@ -68,8 +85,7 @@ function draw() {
                 size: 12
             },
             widthConstraint: {
-                maximum: 200,
-                minimum: 80
+                maximum: 200
             }
         },
         nodes: {
@@ -80,7 +96,7 @@ function draw() {
             }
         }   
     };
-    var network = new vis.Network(container, data, options);
+    network = new vis.Network(container, data, options);
 }
 
 function clearPopUp() {
@@ -105,13 +121,15 @@ function init() {
     draw();
 }
 
+let selectedNode = null
 function post() {
     textbox = document.getElementById('ptext')
+    
     dataToSend = {
         comment: textbox.value,
-        thread: threadID
+        thread: threadID,
+        parentNode: selectedNode
     }
-    
     // The rest of this code assumes you are not using a library.
     // It can be made less wordy if you use one.
     var form = document.createElement("form");
@@ -131,6 +149,91 @@ function post() {
 
     document.getElementById("PostForm").appendChild(form)
     form.submit();
+}
+
+function deleteComment() {
+    dataToSend = {
+        thread: threadID,
+        selectedComment: selectedNode
+    }
+    // The rest of this code assumes you are not using a library.
+    // It can be made less wordy if you use one.
+    var form = document.createElement("form");
+    form.setAttribute("method", 'post');
+    form.setAttribute("action", '/deleteComment');
+
+    for(var key in dataToSend) {
+        if(dataToSend.hasOwnProperty(key)) {
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", key);
+            hiddenField.setAttribute("value", dataToSend[key]);
+
+            form.appendChild(hiddenField);
+        }
+    }
+
+    document.getElementById("PostForm").appendChild(form)
+    form.submit();
+}
+
+function upVoteComment() {
+    dataToSend = {
+        thread: threadID,
+        selectedComment: selectedNode,
+        amount: 1
+    }
+    // The rest of this code assumes you are not using a library.
+    // It can be made less wordy if you use one.
+    var form = document.createElement("form");
+    form.setAttribute("method", 'post');
+    form.setAttribute("action", '/voteComment');
+
+    for(var key in dataToSend) {
+        if(dataToSend.hasOwnProperty(key)) {
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", key);
+            hiddenField.setAttribute("value", dataToSend[key]);
+
+            form.appendChild(hiddenField);
+        }
+    }
+    document.getElementById("PostForm").appendChild(form)
+    form.submit();
+}
+
+function downVoteComment() {
+    dataToSend = {
+        thread: threadID,
+        selectedComment: selectedNode,
+        amount: -1
+    }
+    // The rest of this code assumes you are not using a library.
+    // It can be made less wordy if you use one.
+    var form = document.createElement("form");
+    form.setAttribute("method", 'post');
+    form.setAttribute("action", '/voteComment');
+
+    for(var key in dataToSend) {
+        if(dataToSend.hasOwnProperty(key)) {
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", key);
+            hiddenField.setAttribute("value", dataToSend[key]);
+
+            form.appendChild(hiddenField);
+        }
+    }
+    document.getElementById("PostForm").appendChild(form)
+    form.submit();
+}
+
+function handleNodeClick(){
+    let node = network.getSelectedNodes()
+    if (node){
+        selectedNode = node[0]
+    }
 }
 
 init()

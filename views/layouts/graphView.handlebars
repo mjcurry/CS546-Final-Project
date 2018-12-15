@@ -9,7 +9,7 @@
 
 <main>
     <a href="/">Return to Homepage</a>
-    <div id="mynetwork"></div>
+    <div id="mynetwork", onclick="handleNodeClick()"></div>
 
     <script type="text/javascript"> 
         var tPosts = JSON.parse(decodeURIComponent("{{{tPosts}}}"));
@@ -18,7 +18,9 @@
 
 
     <div id="network-popUp">
-    <span id="operation">node</span> <br>
+    <span id="operation">node</span> 
+    <br>
+
     <table style="margin:auto;"><tr>
             <td>id</td><td><input id="node-id" value="new value" /></td>
         </tr>
@@ -37,10 +39,21 @@
             <label for="ptxet">New Comment: </label><br/>
             <textarea id="ptext" name="ptext" rows='2' cols='64' maxlength='128'></textarea><br/>
             <button type="submit", onclick="post();">Submit</button>
-        </form>
+        </form>        
         <p class='errormsg'>
             {{errmsg}}
         </p>
+
+        <br><br>
+        <form id='delete-node-form'></form>
+            <button type="submit", onclick="deleteComment();">Delete Selected Comment</button>
+        </form>
+        
+        <br><br>
+        <form id='delete-node-form'></form>
+            <button type="submit", onclick="upVoteComment();">UpVote Selected Comment</button>
+            <button type="submit", onclick="downVoteComment();">DownVote Selected Comment</button>
+        </form>
     </div>
 
     <div id="PostForm"></div>
